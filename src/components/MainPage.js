@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components"
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function MainPage(){
 
@@ -17,7 +18,12 @@ export default function MainPage(){
         <Container>
             <Text> Selecione o filme </Text>
             <Films>
-                {films.map(film => <Film key={film.id}> <img src={film.posterURL} alt=""/></Film> )}
+                {films.map(film => 
+                <Link to={`/sessoes/${film.id}`} >
+                    <Film key={film.id}> 
+                        <img src={film.posterURL} alt=""/>
+                    </Film> 
+                </Link>)}
             </Films>
         </Container>
     );
