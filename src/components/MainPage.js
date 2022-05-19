@@ -1,15 +1,23 @@
+import { useState, useEffect } from "react";
 import styled from "styled-components"
+import axios from "axios";
 
 export default function MainPage(){
+
+    const [films, setFilms] = useState([]);
+
+
+    useEffect(() => {
+        const promise = axios.get('https://mock-api.driven.com.br/api/v5/cineflex/movies');
+        promise.then(response => setFilms(response.data));
+    }, []);
+
+    
     return(
         <Container>
             <Text> Selecione o filme </Text>
             <Films>
-                <Film> filme 1</Film>
-                <Film> filme 1</Film>
-                <Film> filme 1</Film>
-                <Film> filme 1</Film>
-
+                {films.map(film => <Film key={film.id}> <img src={film.posterURL} alt=""/></Film> )}
             </Films>
         </Container>
     );
@@ -66,5 +74,9 @@ const Film = styled.div`
     img{
         width: 129px;
         height: 193px;
+    }
+
+    && :hover{
+        cursor: pointer;
     }
 `
