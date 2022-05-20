@@ -5,26 +5,26 @@ import { Link } from "react-router-dom";
 
 export default function MainPage(){
 
-    const [films, setFilms] = useState([]);
+    const [movies, setMovies] = useState([]);
 
 
     useEffect(() => {
         const promise = axios.get('https://mock-api.driven.com.br/api/v5/cineflex/movies');
-        promise.then(response => setFilms(response.data));
+        promise.then(response => setMovies(response.data));
     }, []);
 
     
     return(
         <Container>
             <Text> Selecione o filme </Text>
-            <Films>
-                {films.map(film => 
-                <Link to={`/sessoes/${film.id}`} >
-                    <Film key={film.id}> 
-                        <img src={film.posterURL} alt=""/>
-                    </Film> 
+            <Movies>
+                {movies.map(movie => 
+                <Link to={`/sessoes/${movie.id}`} >
+                    <Movie key={movie.id}> 
+                        <img src={movie.posterURL} alt=""/>
+                    </Movie> 
                 </Link>)}
-            </Films>
+            </Movies>
         </Container>
     );
 };
@@ -58,13 +58,13 @@ const Text = styled.div`
 
 `
 
-const Films = styled.div`
+const Movies = styled.div`
     display:flex;
     flex-wrap:wrap;
     justify-content: space-around;
 `
 
-const Film = styled.div`
+const Movie = styled.div`
     width: 145px;
     height: 209px;
     margin-bottom: 7px; 
