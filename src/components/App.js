@@ -24,7 +24,7 @@ return(
             <Route path="/" element={<MainPage />}/>
             <Route path="/sessoes/:idFilme" element={<MoviePage />}/>
             <Route path="/assentos/:idSessao" element={<SessionPage />}/>
-            <Route path="/sucesso" element={<SuccessPage movie={movie} day={day} time={time} seats={seats} name={name} cpf={cpf}/>} />
+            <Route path="/sucesso" element={<SuccessPage />} />
 
         </Routes>
     </BrowserRouter>

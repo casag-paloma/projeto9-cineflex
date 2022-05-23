@@ -1,23 +1,27 @@
 import { Link } from "react-router-dom"
 import styled from "styled-components"
+
+import { body } from "./SessionPage"
 export default function SuccessPage(){
+
+    const seats = body.seats;
+
     return(
         <Container>
             <MainText> Pedido feito com sucesso!</MainText>
             <InformationText>
                 <h1> Filme e sessão</h1>
-                <h2> Nome do filme</h2>
-                <h2> data horario</h2>
+                <h2> {body.movie}</h2>
+                <h2> {`${body.day} - ${body.time}`}</h2>
             </InformationText>
             <InformationText>
                 <h1>Ingressos</h1>
-                <h2> Assento </h2>
-                <h2></h2>
+                {seats.map(item => <h2> Assento {item}</h2>)}
             </InformationText>
             <InformationText>
                 <h1>Comprador</h1>
-                <h2> {`Nome:`}</h2>
-                <h2> {`CPF`}:</h2>
+                <h2> {`Nome: ${body.name}`}</h2>
+                <h2> {`CPF: ${body.cpf}`}:</h2>
             </InformationText>
             <Link to='/'>
                 <Button> Voltar pra Home</Button>

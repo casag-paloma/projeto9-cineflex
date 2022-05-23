@@ -3,12 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
+export let body ={};
+
 export default function SessionPage(){
 
     const idSession = useParams().idSessao;
 
     const [session, setSession] = useState([]);
     const [day, setDay] = useState([]);
+    const [time, setTime] = useState("");
     const [movie, setMovie] = useState([]);
     const [seats, setSeats] = useState([]);
     const [selectedSeats, setSelectedSeats] = useState([]);
@@ -20,6 +23,7 @@ export default function SessionPage(){
     function GetData(response){
         setSession(response.data);
         setDay(response.data.day);
+        setTime(response.data.name);
         setMovie(response.data.movie);
         setSeats(response.data.seats);
     }
@@ -29,6 +33,15 @@ export default function SessionPage(){
         const data = {ids: ids, name: name, cpf: document};
         console.log(data);
 
+        body ={ movie: movie.title,
+            day: day.weekday,
+            time: time,
+            seats: ids,
+            name: name,
+            cpf: document
+        }
+
+        console.log(body);
         const promise = axios.post('https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many', data);
         promise.then(()=> navigate("/sucesso"), { replace: true } );
     }
