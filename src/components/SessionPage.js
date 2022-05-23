@@ -1,52 +1,50 @@
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
 
 export default function SessionPage(){
-    const idMovie = useParams().idFilme;
 
-    const [movie, setMovie] = useState([])
-    const [showtimes, setShowtimes] = useState([]);
+    const idSession = useParams().idSessao;
 
-    function GetMovie(response){
-        setMovie(response.data)
-        setShowtimes(response.data.days);
+    const [session, setSession] = useState([]);
+    const [movie, setMovie] = useState([]);
+    const [seats, setSeats] = useState([]);
+    let isAvailable = true  ;
+  
 
+    function GetData(response){
+        setSession(response.data);
+        setMovie(response.data.movie);
+        setSeats(response.data.seats);
     }
-
-    useEffect(() => {
-        const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/movies/${idMovie}/showtimes`);
-        promise.then(GetMovie);
-    }, []);
-
-
+    
+    useEffect(()=>{
+        const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSession}/seats`);
+        
+        promise.then(GetData);
+    }, [])
+    
+    console.log(session, seats);
     return(
         <Container>
-            <Text> Selecione o horário </Text>
-            <Showtimes>
-
-                {showtimes.map(item => <ShowtimeFunction key={item.id} weekday={item.weekday} date={item.date} showtimes={item.showtimes}/>)}
-
-            </Showtimes>
+            <Text> {"Selecione o(s) assento(s)"} </Text>
+            <Seats>
+                {seats.map(iten => <Seat key={iten.id} isAvailable={iten.isAvailable} >{iten.name}</Seat> )}
+            </Seats>
+            <Options>
+                <Selected> <div></div> <span> Selecionado </span></Selected>
+                <Available><div></div> <span> Disponível </span></Available>
+                <Unavailable><div></div> <span> Indisponível </span></Unavailable>
+            </Options>
+            <Data></Data>
             <Footer>
                 <img src={movie.posterURL}/>
                 <span>{movie.title}</span>
             </Footer>
         </Container>
-    )
-}
-
-function ShowtimeFunction({weekday, date, showtimes}){
-    return(
-        <Showtime>
-            <span> {weekday} - {date}</span>
-            <Buttons>
-                {showtimes.map(item => <Button key={item.id}> {item.name} </Button> )}
-            </Buttons>
-        </Showtime>
-    )
-}
+    );
+};
 
 
 const Container = styled.div`
@@ -77,43 +75,169 @@ const Text = styled.div`
     background-color: white;
 
 `
-
-const Showtimes = styled.div`
-    width: 100%;
-    margin-left: 24px;
+const Seats = styled.div`
+    width: 85%;
+    background-color: ${props => props.cor};
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
 `
 
-const Showtime = styled.div`
-    font-family: 'Roboto', sans-serif;
+const Seat = styled.div`
+    box-sizing: border-box;
+
+    width: 26px;
+    height: 26px;
+    margin: 9px 3.5px;
+
+    background-color: ${props => props.isAvailable ? '#C3CFD9' : '#FBE192'};
+    border: 1px solid ${props => props.isAvailable ? '#7B8B99' : '#F7C52B'};
+    border-radius: 12px;
+
+    font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
-    font-size: 20px;
-    line-height: 23px;
-    letter-spacing: 0.02em;
+    font-size: 11px;
+    line-height: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.04em;
 
-    color: #293845;
+    color: #000000;
 
-    margin-bottom: 23px;
+    &&:hover{
+        cursor:pointer
+    }
+`
+
+const Options = styled.div`
+    width: 85%;
     display:flex;
-    flex-direction:column;
+    justify-content: space-evenly;
+`
+
+const Selected = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    div{
+            box-sizing: border-box;
+
+            width: 25px;
+            height: 25px;
+            margin: 9px 3.5px;
+
+            background-color: #8DD7CF;
+            border: 1px solid #1AAE9E;
+            border-radius: 17px;
+
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.04em;
+
+            color: #000000;
+        }
 
     span{
         font-family: 'Roboto';
         font-style: normal;
         font-weight: 400;
-        font-size: 20px;
-        line-height: 23px;
-        display: flex;
-        align-items: center;
-        letter-spacing: 0.02em;
+        font-size: 13px;
+        line-height: 15px;
+        letter-spacing: -0.013em;
 
-        color: #293845;
+        color: #4E5A65;
     }
-
 `
+const Available = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    div{
+            box-sizing: border-box;
+
+            width: 24px;
+            height: 24px;
+            margin: 9px 3.5px;
+
+            background-color: #C3CFD9;
+            border: 1px solid #7B8B99;
+            border-radius: 17px;
+
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.04em;
+
+            color: #000000;
+        }
+    
+    span{
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 15px;
+        letter-spacing: -0.013em;
+
+        color: #4E5A65;
+    }
+`
+const Unavailable = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    div{
+            box-sizing: border-box;
+
+            width: 24px;
+            height: 24px;
+            margin: 9px 3.5px;
+
+            background-color: #FBE192;
+            border: 1px solid #F7C52B;
+            border-radius: 17px;
+
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.04em;
+
+            color: #000000;
+        }
+
+    span{
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 15px;
+        letter-spacing: -0.013em;
+
+        color: #4E5A65;
+    }
+`
+
+const Data = styled.div``
 
 const Buttons = styled.div`
     display:flex;
